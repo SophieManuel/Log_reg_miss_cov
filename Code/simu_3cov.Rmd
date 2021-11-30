@@ -145,8 +145,8 @@ Estimation des poids de la combinaison linéaire non-unique par la méthode de M
 ```{r}
 simMC <- 1000
 vect <- NULL
-gam0 <- 5
-gam2 <- 5
+gam0 <- 2
+gam2 <- 2
 for (nMC in 1:simMC)
 {
   X.complete <- matrix(rnorm(n*p), nrow=n)%*%chol(Sigma.star) + matrix(rep(mu.star,n), nrow=n, byrow = TRUE)
@@ -219,13 +219,13 @@ for (NB in 1:nbsim){
   std.cc <- sqrt(diag(V_cc))
   
  # -------  SAEM
-  list.saem=miss.glm(y~.,data=X.obs, print_iter=FALSE,var_cal=TRUE)
+  list.saem=miss.glm(y~.,data=as.data.frame(X.obs), print_iter=FALSE,var_cal=TRUE)
   beta.saem = list.saem$coefficients
   std.saem = list.saem$s.err
   
-  EST.comp[NB,] = c(beta0.complete,beta.complete, "MAR")
-  EST.cc[NB,] = c(beta0.cc,beta.cc, "MAR")
-  EST.saem[NB,] = c(beta.saem, "MAR")
+  EST.comp[NB+nbsim,] = c(beta0.complete,beta.complete, "MAR")
+  EST.cc[NB+nbsim,] = c(beta0.cc,beta.cc, "MAR")
+  EST.saem[NB+nbsim,] = c(beta.saem, "MAR")
 
   STD.comp[NB,] = std.complete
   STD.cc[NB,] = std.cc
@@ -274,7 +274,7 @@ mean(LENGTH.saem)
 ```
 
 ```{r}
-dfbeta1 <- data.frame("Estimateur"= as.numeric(rbind(EST.comp[,2], EST.cc[,2], EST.saem[,2])), "meth" = as.factor( c(rep("comp",nbsim), rep("cc",nbsim), rep("saem",nbsim))), "alea"= as.factor(rep(EST.comp[,5],3))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
+dfbeta1 <- data.frame("Estimateur"= as.numeric(c(EST.comp[,2], EST.cc[,2], EST.saem[,2])), "meth" = as.factor( c(rep("comp",nbsim), rep("cc",nbsim), rep("saem",nbsim))), "alea"= as.factor(rep(EST.comp[,5],3))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
 ```
 
 boxplots esthétiques comparaison MCAR/MAR pour comp, cc et saem, 10% valeurs manquantes n=500
@@ -283,7 +283,7 @@ boxplots esthétiques comparaison MCAR/MAR pour comp, cc et saem, 10% valeurs ma
 box <- ggplot(dfbeta1, aes(meth, Estimateur)) + geom_boxplot(aes(fill=alea))
 box <- box + ggtitle("Boxplots de la répartion des données en fonction \ndu type d'aléatoire et des méthodes d'estimation")
 box + theme(plot.title = element_text(hjust = 0.5))
-abline(h=0.5)
+#abline(h=0.5)
 ```
 
 
