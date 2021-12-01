@@ -274,7 +274,8 @@ mean(LENGTH.saem)
 ```
 
 ```{r}
-dfbeta1 <- data.frame("Estimateur"= as.numeric(c(EST.comp[,2], EST.cc[,2], EST.saem[,2])), "meth" = as.factor( c(rep("comp",nbsim), rep("cc",nbsim), rep("saem",nbsim))), "alea"= as.factor(rep(EST.comp[,5],3))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
+i=4
+dfbeta1 <- data.frame("Estimateur"= as.numeric(c(EST.comp[,i], EST.cc[,i], EST.saem[,i])), "meth" = as.factor( c(rep("comp",nbsim), rep("cc",nbsim), rep("saem",nbsim))), "alea"= as.factor(rep(EST.comp[,5],3))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
 ```
 
 boxplots esthétiques comparaison MCAR/MAR pour comp, cc et saem, 10% valeurs manquantes n=500
