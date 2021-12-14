@@ -1,9 +1,17 @@
 ---
 title: "Régression logistique avec covariables manquantes"
 author: "Laurent Llinares & Sophie Manuel"
-date: "08/12/2021"
-output: ioslides_presentation
+date: "17/12/2021"
+output:
+  ioslides_presentation: 
+    logo: logo.png
+    incremental: yes
+    highlight: tango
+    transition: slower
+    beamer_presentation: default
+    slidy_presentation: default
 ---
+ 
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
@@ -18,10 +26,19 @@ knitr::opts_chunk$set(echo = FALSE)
 
 # Présentation de l'article
 
-## Contexte
+## Article
 
 *Logistic regression with missing covariates—Parameter estimation, model selection and prediction within a joint-modeling framework* 
-par Wei Jiang .al en collaboration avec le groupe TraumaBase du APHP.
+par Wei Jiang .al en collaboration avec le groupe TraumaBase de l'APHP. 2019
+
+code de l'article :https://github.com/wjiang94/miSAEM_logReg 
+
+package: misaem https://github.com/wjiang94/misaem
+
+Un exemple de classification supervisée avec valeurs manquantes
+
+## Contexte
+
 
 - Détecter les chocs hémorragiques pour les patients souffrant de traumatismes physiques
 - Afin d'apporter une réponse adaptée selon un principe de "red flag"
@@ -40,7 +57,7 @@ On suppose que les covariables suivent une normale $X_i \sim \mathcal N(\mu_i,\S
   
 Pour estimer $\theta$ on souhaite utiliser l'estimateur du maximum de vraisemblance.  
   
-Dans la suite on introduira des valeurs manquantes à ce modèle.
+On introduit des valeurs manquantes à ce modèle selon deux patterns que l'on explicitera .
 
 ## Algorithme EM
 
@@ -128,29 +145,57 @@ Les valeurs manquantes dépendent des autres covariables.
 
 # Simulations
 
-## 2 covariables
+## Méthodes
 
-paramètres de simulation:
+On utilise dans nos simulations les méthodes **CompleteCase, saem,** comparés au modèle **complet**.
 
-n <- 500 # or a smaller number of subjects 
-p <- 3     # number of explanatory variables
-mu.star <- 1:p  # mean of the explanatory variables
-sd <- 1:p # standard deviations
+Le modèle **complet**:  opérer une régression logistique avec aucune valeur manquante 
 
- with correlation
-C <- cbind(c(1,0.8,0.5),c(0.8,1,0.3),c(0.5,0.3,1))  
- without correlation
-C = diag(p)
+La méthode **Completecase**: éliminer les lignes avec valeurs manquantes
 
-Sigma.star <- diag(sd)%*%C%*%diag(sd) # variance-covariance matrix of the explanatory variables
-beta.star <- c(0.5, -0.3, 1) # coefficients of logistic regression
-beta0.star <- -0.2  # intercept
-beta.true = c(beta0.star,beta.star)
-percentage of missingness
-p.miss <- 0.10 
-patterns = runif(n*p)<p.miss
+La méthode **saem**: ici introduite.
 
-## 3 covariables
+## Paramètres du modèle
+
+- $500$ individus suivant une gaussienne
+- 50 répétions de simulation
+- avec 2 covariables :
+$$
+ \beta = (0.2, ~0.5,~ -0.3)~~~~~~\text{et }~~~~ 
+ C = 
+ \begin{pmatrix}
+ 1 & 0.8 \\
+ 0.8 & 1
+ \end{pmatrix}
+$$
+- avec 3 covariables
+$$
+ \beta = (0.2, ~0.5,~ -0.3,~ 1) ~~~~~~\text{et }~~~~
+ C = 
+ \begin{pmatrix}
+ 1 & 0.8 & 0.5 \\
+ 0.8 & 1 & 0.3\\
+ 0.5 & 0.3 & 1
+ \end{pmatrix}
+$$
+
+## 2 covariables et 3 covariables
+
+```{r echo=FALSE, out.width='100%%',fig.align= "center", fig.cap=" Comparaison de l'influence du nombre de covariables sur l'estimation de beta2 sans corrélation avec un échantillon de 500 individus et 10% de valeurs manquantes",include =T}
+knitr::include_graphics('./graph/boxplot_2vs3cov.png')
+```
+
+## Corrélation : avec et sans
+
+```{r echo=FALSE, out.width='100%%',fig.align= "center", fig.cap="Comparaison de l'influence d la corrélation sur l'estimation de beta_2 avec 2 covariables sur un échantillon de 500 individus et 10% de valeurs manquantes",include =T}
+knitr::include_graphics('./graph/boxplot_corr_sscorr.png')
+```
+
+## 10 % et 30 % de valeurs manquantes
+
+```{r echo=FALSE, out.width='100%%',fig.align= "center", fig.cap=" Comparaison de l'influence du pourcentage de valeurs manquantes sur l'estimation de beta2 sur un échantillon de 500 individus avec 2 covariables  et sans corrélation",include =T}
+knitr::include_graphics('./graph/boxplot_10vs30.png')
+```
 
 ## Avantages et Limites
 
@@ -165,3 +210,29 @@ patterns = runif(n*p)<p.miss
 - Code beaucoup trop long à faire tourner
 - Jeu de données indisponible
 
+##
+
+<center>
+<table>
+    <tr>
+         <td style="font-size:50px">
+         <br />
+         <br />
+         <br />
+            Merci pour votre attention
+            <br />
+            <br />
+            <br />
+            <br />
+           </td>
+    </tr>
+</table>
+</center>
+
+<table>
+    <tr>
+          <td style="font-size:20px">
+              https://github.com/SophieManuel/Log_reg_miss_cov
+           </td>
+    </tr>
+</table>
