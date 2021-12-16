@@ -114,7 +114,7 @@ $$
 ## MCAR
 **Missing Completly At Random**
   
-On note $\eta_i$ la variable indiquant la présence de la donnée ou non.
+On note $\eta_{i,j}$ la variable indiquant la présence de la donnée ou non.
 $$
 \eta_{i,j} =
 \begin{cases}

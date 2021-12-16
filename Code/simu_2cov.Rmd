@@ -39,7 +39,7 @@ beta.star <- c(0.5, -0.3) # coefficients of logistic regression
 beta0.star <- -0.2  # intercept
 beta.true = c(beta0.star,beta.star)
 #percentage of missingness
-p.miss <- 0.10 
+p.miss <- 0.30 
 patterns = runif(n*p)<p.miss
 ```
 
@@ -109,7 +109,7 @@ Estimation des poids de la combinaison linéaire non-unique par la méthode de M
 ```{r}
 simMC <- 1000
 vect <- NULL
-gam0 <- c(3,2)
+gam0 <- c(5,-0.05)
 for (nMC in 1:simMC)
 {
   X.complete <- matrix(rnorm(n*p), nrow=n)%*%chol(Sigma.star) + matrix(rep(mu.star,n), nrow=n, byrow = TRUE)
@@ -208,7 +208,7 @@ boxplots esthétiques comparaison MCAR/MAR pour comp, cc et saem, $10\%$ valeurs
 ```{r}
 box <- ggplot(dfbeta2_2_sscorr_10percent, aes(x=Méthode,y=Estimateur)) + geom_boxplot(aes(fill=alea))
 box <- box + geom_hline(yintercept=-0.3, linetype="dashed", color = "purple", size=1)
-box <- box + ggtitle(expression(paste("Boxplots de l'estimation de ",beta[2]," avec 2 covariables")))
+box <- box + ggtitle(expression(paste("Boxplots de l'estimation de ",beta[2]," avec 30% de valeurs manquantes")))
 #box <- box + ggtitle(paste(expression("Boxplots de l'estimation de ",beta[2])," en fonction \ndu type d'aléatoire et des méthodes d'estimation sans corrélation\n  échantillon ",n, "avec",p, "variables et ",p.miss*100,"% de valeurs manquantes" )  )
 box + theme(plot.title = element_text(hjust = 0.5))
 ```

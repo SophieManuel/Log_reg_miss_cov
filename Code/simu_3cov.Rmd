@@ -88,7 +88,7 @@ for (NB in 1:nbsim){
   std.cc <- sqrt(diag(V_cc))
   
  # -------  SAEM
-  list.saem=miss.glm(y~.,data=X.obs, print_iter=FALSE,var_cal=TRUE)
+  list.saem=miss.glm(y~.,data=as.data.frame(X.obs), print_iter=FALSE,var_cal=TRUE)
   beta.saem = list.saem$coefficients
   std.saem = list.saem$s.err
   
@@ -201,14 +201,15 @@ Sys.time()-deb
 
 
 ```{r}
-dfbeta1_3_sscorr_10pecent <- data.frame("Estimateur"= as.numeric(c(EST.comp[,2], EST.cc[,2], EST.saem[,2])), "Méthode" = as.factor( c(rep("complet",nbsim*2), rep("cc",nbsim*2), rep("saem",nbsim*2))), "alea"= as.factor(c(EST.comp[,p+2],EST.cc[,p+2],EST.saem[,p+2]))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
+dfbeta1_3_sscorr_10pecent <- data.frame("Estimateur"= as.numeric(c(EST.comp[,3], EST.cc[,3], EST.saem[,3])), "Méthode" = as.factor( c(rep("complet",nbsim*2), rep("cc",nbsim*2), rep("saem",nbsim*2))), "alea"= as.factor(c(EST.comp[,p+2],EST.cc[,p+2],EST.saem[,p+2]))) # dernière colonne du tableau pour créer l'indicatrice MCAR/MAR
+dfbeta1_3_sscorr_10percent <- dfbeta1_3_sscorr_10pecent[dfbeta1_3_sscorr_10pecent[,1]!=0,]
 ```
 
 boxplots esthétiques comparaison MCAR/MAR pour comp, cc et saem, $10\%$ valeurs manquantes $n=500$
 ```{r}
-box <- ggplot(dfbeta1, aes(x=Méthode,y=Estimateur)) + geom_boxplot(aes(fill=alea))
-box <- box + geom_hline(yintercept=0.5, linetype="dashed", color = "purple", size=1)
-box <- box + ggtitle(expression(paste("Boxplots de l'estimation de ",beta[1]," avec ",p, " covariables")))
+box <- ggplot(dfbeta1_3_sscorr_10percent, aes(x=Méthode,y=Estimateur)) + geom_boxplot(aes(fill=alea))
+box <- box + geom_hline(yintercept=-0.3, linetype="dashed", color = "purple", size=1)
+box <- box + ggtitle(expression(paste("Boxplots de l'estimation de ",beta[2]," avec 3 covariables")))
 #box <- box + ggtitle(paste(expression("Boxplots de l'estimation de ",beta[1])," en fonction \ndu type d'aléatoire et des méthodes d'estimation sans corrélation\n  échantillon ",n, "avec",p, "variables et ",p.miss*100,"% de valeurs manquantes" )  )
 box + theme(plot.title = element_text(hjust = 0.5))
 ```
